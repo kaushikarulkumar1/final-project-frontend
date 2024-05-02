@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order</title>
+    <script src="configuration.js"></script>
+</head>
+<body>
+    <h1>Place Order</h1>
+
+    <div>
+        <h2>Flower Information</h2>
+        <p id="flower-details"></p>
+    </div>
+
+    <div>
+        <h2>Delivery Information</h2>
+        <p id="delivery-details"></p>
+    </div>
+
+    <div>
+        <h2>Price Details</h2>
+        <p>Flower Price: $75</p>
+        <p>Discount: $10</p>
+        <p>Delivery Fee: $25</p>
+        <p>Total Price: <span id="total-price"></span></p>
+    </div>
+
+    <button id="place-order-btn">Place Order</button>
+
+    <script>
+        const flowerInfo = JSON.parse(localStorage.getItem('flowerInfo'));
+        const deliveryInfo = JSON.parse(localStorage.getItem('deliveryInfo'));
+
+        document.getElementById('flower-details').innerText = `Flower: ${flowerInfo.flowerName}`;
+        document.getElementById('delivery-details').innerText = `Address: ${deliveryInfo.address}, ${deliveryInfo.city}, ${deliveryInfo.state}, ${deliveryInfo.zipcode}`;
+
+        const flowerPrice = 75;
+        const deliveryFee = 25;
+        const discount = configuration.isLoggedIn() ? 10 : 0; 
+        const totalPrice = flowerPrice - discount + deliveryFee;
+
+        document.getElementById('total-price').innerText = `$${totalPrice}`;
+
+        document.getElementById('place-order-btn').addEventListener('click', placeOrder);
+
+        async function placeOrder() {
+            const order = {
+                flower: flowerInfo.flowerName,
+                address: `${deliveryInfo.address}, ${deliveryInfo.city}, ${deliveryInfo.state}, ${deliveryInfo.zipcode}`,
+                price: totalPrice,
+                status: "submitted"
+            };
+
+            try {
+                const response = await fetch(configuration.host() + "/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${configuration.token()}`
+                    },
+                    body: JSON.stringify(order)
+                });
+
+                if (response.status === 200) {
+                    alert("Order placed successfully!");
+                    window.location.href = "track_order.html";
+                } else {
+                    alert("Failed to place order. Please try again later.");
+                }
+            } catch (error) {
+                console.error("Error placing order:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        }
+    </script>
+</body>
+</html>

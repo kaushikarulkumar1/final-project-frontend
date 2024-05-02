@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order</title>
+    <script src="configuration.js"></script>
+</head>
+<body>
+    <h1>Track Your Orders</h1>
+
+    <div id="order-list">
+    </div>
+
+    <script>
+        async function fetchOrders() {
+            try {
+                
+                if (!configuration.isLoggedIn()) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const response = await fetch(configuration.host() + "/orders", {
+                    headers: {
+                        Authorization: `Bearer ${configuration.token()}`
+                    }
+                });
+
+                if (response.ok) {
+                    const orders = await response.json();
+                    displayOrders(orders);
+                } else {
+                    console.error("Failed to fetch orders:", response.statusText);
+                    alert("Failed to fetch orders. Please try again later.");
+                }
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+                alert("An error occurred while fetching orders. Please try again later.");
+            }
+        }
+
+        function displayOrders(orders) {
+            const orderListDiv = document.getElementById("order-list");
+            orderListDiv.innerHTML = ""; 
+
+            if (orders.length === 0) {
+                orderListDiv.innerHTML = "<p>No orders found.</p>";
+            } else {
+                orders.forEach(order => {
+                    const orderDetails = document.createElement("div");
+                    orderDetails.classList.add("order-details");
+                    orderDetails.innerHTML = `
+                        <p><strong>Flower Name:</strong> ${order.flower}</p>
+                        <p><strong>Total Cost:</strong> $${order.price}</p>
+                        <p><strong>Recipient Name:</strong> ${order.recipientFirstName} ${order.recipientLastName}</p>
+                        <p><strong>Status:</strong> ${order.status}</p>
+                    `;
+                    orderListDiv.appendChild(orderDetails);
+                });
+            }
+        }
+        fetchOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Basket</title>
+    <style>
+        /* CSS for adjusting image size */
+        #flower-image {
+            max-width: 100px; /* Set maximum width */
+            height: auto; /* Maintain aspect ratio */
+            float: left; /* Align image to the left */
+            margin-right: 20px; /* Add some space between image and text */
+        }
+
+        /* CSS for delivery information section */
+        #delivery-info {
+            float: right; /* Move delivery info to the right side */
+            margin-top: 50px; /* Add space between flower image and delivery info */
+        }
+
+        #delivery-info label {
+            display: block; /* Each label on a new line */
+            margin-bottom: 10px; /* Add space between labels */
+        }
+
+        #delivery-info input[type="date"] {
+            margin-bottom: 20px; /* Add space between date input and button */
+        }
+
+        #add-to-basket-btn {
+            padding: 10px 20px; /* Add padding to the button */
+            background-color: #4CAF50; /* Green background color */
+            border: none; /* Remove border */
+            color: white; /* White text color */
+            text-align: center; /* Center text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make it a block element */
+            font-size: 16px; /* Increase font size */
+            cursor: pointer; /* Add cursor pointer */
+        }
+
+        /* Clearfix to clear floats */
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add to Basket</h1>
+    <div class="clearfix">
+        <div>
+            <img src="" alt="Flower Image" id="flower-image">
+            <p id="flower-name"></p>
+        </div>
+
+        <div id="delivery-info">
+            <h2>Delivery Information</h2>
+            <label for="delivery-date">Delivery Date:</label>
+            <input type="date" id="delivery-date" required>
+
+            <label for="purchase-option">Purchase Option:</label>
+            <select id="purchase-option" required>
+                <option value="standard">Standard</option>
+                <option value="express">Express</option>
+            </select>
+
+            <button id="add-to-basket-btn">Add to Basket</button>
+        </div>
+    </div>
+
+    <script>
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const flowerName = urlParams.get('flowerName');
+        const flowerImage = urlParams.get('flowerImage');
+
+        document.getElementById('flower-image').src = flowerImage;
+        document.getElementById('flower-name').innerText = flowerName;
+
+        document.getElementById('add-to-basket-btn').addEventListener('click', addToBasket);
+
+        async function addToBasket() {
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const purchaseOption = document.getElementById('purchase-option').value;
+
+            const basketItem = {
+                flowerName: flowerName,
+                flowerImage: flowerImage,
+                deliveryDate: deliveryDate,
+                purchaseOption: purchaseOption
+            };
+
+            let basketItems = JSON.parse(localStorage.getItem('basketItems')) || [];
+
+            basketItems.push(basketItem);
+
+            localStorage.setItem('basketItems', JSON.stringify(basketItems));
+            const signedIn = configuration.isLoggedIn();
+
+            if (!signedIn) {
+                window.location.href = "add_delivery_info.html";
+            } else {
+                window.location.href = "place_order.html";
+            }
+        }
+    </script>
+
+    <script src="configuration.js"></script> 
+</body>
+</html>

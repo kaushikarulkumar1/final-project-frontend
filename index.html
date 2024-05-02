@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="general.css">
+    <style>
+        /* CSS for adjusting image size */
+        .flower img {
+            max-width: 100px; /* Set maximum width */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        /* CSS for arranging flowers in rows */
+        .flower-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .flower {
+            flex-basis: 20%; /* Adjust to change the number of flowers per row */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <title>Flower Shop Homepage</title>
+</head>
+<body>
+
+    <ul class="topnav">
+        <li><a class="active" href="index.html">Home</a></li>
+        <li class="right"><a href="#" onclick="return false;">Basket <span id="basket-count">0</span></a></li>
+        <li class="right"><a href="#" onclick="return false;">Help</a></li>
+        <li class="right"><a href="login.html">Login</a></li>
+    </ul>
+
+    <h1>Send Her Blooms</h1>
+    <h2>She will Love! Shop all Mother's Day Flowers and Gifts!</h2>
+
+    <form id="filter-form">
+        <label for="flower-type">Flower Type:</label>
+        <select id="flower-type">
+            <option value="mixed">Mixed</option>
+            <option value="roses">Roses</option>
+            <option value="lilies">Lilies</option>
+            <option value="tulips">Tulips</option>
+            <option value="daisies">Daisies</option>
+        </select>
+
+        <label for="occasion">Occasion:</label>
+        <select id="occasion">
+            <option value="mothers-day">Mother's Day</option>
+            <option value="birthday">Birthday</option>
+            <option value="thank-you">Thank You</option>
+        </select>
+
+        <label for="color">Color:</label>
+        <select id="color">
+            <option value="mixed">Mixed</option>
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="green">Green</option>
+            <option value="orange">Orange</option>
+        </select>
+
+        <label for="sorting">Sorting:</label>
+        <select id="sorting">
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+        </select>
+
+        <input type="submit" value="Apply Filters">
+    </form>
+
+    <div class="flower-container">
+        <div class="flower">
+            <a href="add_to_basket.html?flowerId=1&flowerName=Flower%201&flowerImage=1.jpeg" onclick="addToBasket(1)">
+                <img src="1.jpeg" alt="Flower Image 1">
+                <p>Flower 1</p>
+            </a>
+        </div>
+        <div class="flower">
+            <a href="add_to_basket.html?flowerId=2&flowerName=Flower%202&flowerImage=2.jpeg" onclick="addToBasket(2)">
+                <img src="2.jpeg" alt="Flower Image 2">
+                <p>Flower 2</p>
+            </a>
+        </div>
+        <div class="flower">
+            <a href="add_to_basket.html?flowerId=3&flowerName=Flower%203&flowerImage=3.jpeg" onclick="addToBasket(3)">
+                <img src="3.jpeg" alt="Flower Image 3">
+                <p>Flower 3</p>
+            </a>
+        </div>
+        <div class="flower">
+            <a href="add_to_basket.html?flowerId=4&flowerName=Flower%204&flowerImage=4.jpeg" onclick="addToBasket(4)">
+                <img src="4.jpeg" alt="Flower Image 4">
+                <p>Flower 4</p>
+            </a>
+        </div>
+        <div class="flower">
+            <a href="add_to_basket.html?flowerId=5&flowerName=Flower%205&flowerImage=5.jpeg" onclick="addToBasket(5)">
+                <img src="5.jpeg" alt="Flower Image 5">
+                <p>Flower 5</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('basket-count').innerText = localStorage.getItem('basketCount') || 0;
+    </script>
+
+    <script>
+        function addToBasket(flowerId) {
+            let item = {
+                id: flowerId
+            };
+            localStorage.setItem('cartItem', JSON.stringify(item));
+            updateCartItemCount();
+        }
+
+        function updateCartItemCount() {
+            let cartItem = localStorage.getItem('cartItem');
+            let basketCount = document.getElementById('basket-count');
+            if (cartItem) {
+                basketCount.innerText = '1';
+            } else {
+                basketCount.innerText = '0';
+            }
+        }
+
+        updateCartItemCount();
+    </script>
+</body>
+</html>
